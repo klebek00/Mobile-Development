@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.example.watertracker.model.UserDataManager
 
 class MainActivity : AppCompatActivity() {
     private var progress = 0
@@ -16,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonToday: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var textView: TextView
-
+    private lateinit var userDataManager: UserDataManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,22 @@ class MainActivity : AppCompatActivity() {
         textView = findViewById(R.id.text_view_progress)
         textView.text = progress.toString()
         textView.text = "${progress}%"
+
+        userDataManager = UserDataManager(this)
+
+        val userData = userDataManager.loadUserData()
+
+        if (userData != null) {
+            val textViewResult = findViewById<TextView>(R.id.textView3)
+
+            val dailyWaterIntake = userData.dailyWaterIntake ?: 0.0
+            val counter = userData.counter ?: 0.0
+
+            val formattedDailyWaterIntake = String.format("%.2f", dailyWaterIntake)
+            val formattedCounter = String.format("%.2f", counter)
+
+            textViewResult.text = "$formattedCounter / $formattedDailyWaterIntake L"
+        }
 
         button.setOnClickListener{
             if (progress <= 90) {

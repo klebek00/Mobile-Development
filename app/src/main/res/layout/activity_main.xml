@@ -15,7 +15,7 @@
         android:layout_height="84dp"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/main"
-        android:fontFamily="sans-serif-light"
+        android:fontFamily="@font/secular_one"
         android:text="+ DRINK"
         android:textColorLink="@color/black"
         android:textSize="34sp"
@@ -23,6 +23,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progress_bar"
         tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="60dp"
+        android:fontFamily="@font/secular_one"
+        android:text="0.0 L"
+        android:textSize="48sp"
+        app:layout_constraintBottom_toTopOf="@+id/progress_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -45,6 +59,7 @@
         android:id="@+id/text_view_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/secular_one"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
         app:layout_constraintEnd_toEndOf="@+id/progress_bar"
