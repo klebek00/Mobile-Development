@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var textView: TextView
     private lateinit var userDataManager: UserDataManager
+    private var counter: Double = 0.0
+    private var dailyWaterIntake: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,28 +31,42 @@ class MainActivity : AppCompatActivity() {
 
         progressBar = findViewById(R.id.progress_bar)
         textView = findViewById(R.id.text_view_progress)
-        textView.text = progress.toString()
-        textView.text = "${progress}%"
 
         userDataManager = UserDataManager(this)
 
-        val userData = userDataManager.loadUserData()
-
-        if (userData != null) {
-            val textViewResult = findViewById<TextView>(R.id.textView3)
-
-            val dailyWaterIntake = userData.dailyWaterIntake ?: 0.0
-            val counter = userData.counter ?: 0.0
-
-            val formattedDailyWaterIntake = String.format("%.2f", dailyWaterIntake)
-            val formattedCounter = String.format("%.2f", counter)
-
-            textViewResult.text = "$formattedCounter / $formattedDailyWaterIntake L"
+        if (savedInstanceState != null) {
+            progress = savedInstanceState.getInt("progress", 0)
+            counter = savedInstanceState.getDouble("counter", 0.0)
+            dailyWaterIntake = savedInstanceState.getDouble("dailyWaterIntake", 0.0)
+        } else {
+            val userData = userDataManager.loadUserData()
+            if (userData != null) {
+                dailyWaterIntake = userData.dailyWaterIntake ?: 0.0
+                counter = userData.counter ?: 0.0
+            }
         }
 
-        button.setOnClickListener{
-            if (progress <= 90) {
-                progress += 10
+        // Изначально вычисляем прогресс на основе данных
+        if (dailyWaterIntake > 0) {
+            progress = (counter / dailyWaterIntake * 100).toInt()
+            if (progress > 100) progress = 100
+        }
+
+        amountCounter()
+        updateProgressBar()
+
+        button.setOnClickListener {
+            counter += 0.2
+
+            amountCounter()
+
+            userDataManager.updateCounter(counter)
+
+            if (progress < 100) {
+                progress = (counter / dailyWaterIntake * 100).toInt()
+                if (progress > 100) {
+                    progress = 100
+                }
                 updateProgressBar()
             }
         }
@@ -60,13 +76,27 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("progress", progress)
+        outState.putDouble("counter", counter)
+        outState.putDouble("dailyWaterIntake", dailyWaterIntake)
     }
 
     private fun updateProgressBar() {
         progressBar.progress = progress
-        textView.text = progress.toString()
         textView.text = "${progress}%"
+    }
 
+    private fun amountCounter() {
+        val textViewResult = findViewById<TextView>(R.id.textView3)
+        val formattedDailyWaterIntake = String.format("%.2f", dailyWaterIntake)
+        val formattedCounter = String.format("%.2f", counter)
+        textViewResult.text = "$formattedCounter / $formattedDailyWaterIntake L"
     }
 }
+
+
+//view model   choose counter     day upgrade

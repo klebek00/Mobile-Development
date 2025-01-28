@@ -6,15 +6,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#BCE8ECF0"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:layout_editor_absoluteX="23dp"
+    tools:layout_editor_absoluteY="340dp">
+
+
+    <Button
+        android:id="@+id/button11"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/main"
+        android:text="Today"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button12"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/main"
+        android:text="History"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button13"
+        app:layout_constraintStart_toEndOf="@id/button11"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button13"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/main"
+        android:text="Me"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button12"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/button7"
         style="@style/Widget.Material3.Button"
         android:layout_width="201dp"
         android:layout_height="84dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="125dp"
         android:backgroundTint="@color/main"
         android:fontFamily="@font/secular_one"
         android:text="+ DRINK"
@@ -22,23 +62,25 @@
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.918"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.533"
         tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:layout_marginBottom="60dp"
         android:fontFamily="@font/secular_one"
         android:text="0.0 L"
         android:textSize="48sp"
         app:layout_constraintBottom_toTopOf="@+id/progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.667" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -55,6 +97,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         tools:progress="60" />
 
     <TextView
@@ -68,43 +111,5 @@
         app:layout_constraintStart_toStartOf="@+id/progress_bar"
         app:layout_constraintTop_toTopOf="@+id/progress_bar"
         tools:text="60%" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <Button
-            android:id="@+id/button11"
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/main"
-            android:text="Today"
-            tools:ignore="MissingConstraints" />
-
-        <Button
-            android:id="@+id/button12"
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/main"
-            android:text="History"
-            tools:ignore="MissingConstraints" />
-
-        <Button
-            android:id="@+id/button13"
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/main"
-            android:text="Me"
-            tools:ignore="MissingConstraints" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

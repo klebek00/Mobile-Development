@@ -11,27 +11,29 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="152dp"
         android:fontFamily="@font/adlam_display"
         android:text="What's your gender?"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.265" />
 
     <RadioGroup
 
         android:id="@+id/gen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="160dp"
         android:backgroundTint="#EB0000"
-        android:checkedButton="@id/radioButton"
 
+        android:checkedButton="@id/radioButton"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.519"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <RadioButton
@@ -66,16 +68,17 @@
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="96dp"
         android:layout_height="48dp"
-        android:layout_marginTop="724dp"
         android:text="Next"
         android:textColor="@color/main"
         android:textColorHighlight="@color/main"
         android:textColorHint="@color/main"
         android:textColorLink="@color/main"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintHorizontal_bias="0.946"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.991"
         app:rippleColor="@color/main"
         app:strokeColor="@color/main" />
 

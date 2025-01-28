@@ -5,14 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#A5E0FA"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!--on below line we are adding an image view-->
+
     <ImageView
         android:id="@+id/idIVLogo"
-        android:layout_width="211dp"
-        android:layout_height="331dp"
+        android:layout_width="156dp"
+        android:layout_height="250dp"
         android:layout_centerInParent="true"
         android:layout_marginStart="25dp"
         android:layout_marginLeft="25dp"
@@ -22,7 +21,6 @@
         android:layout_marginBottom="25dp"
         android:src="@drawable/water_drop" />
 
-    <!--on below line we are creating progress bar-->
     <ProgressBar
         android:id="@+id/idPBLoading"
         android:layout_width="wrap_content"
