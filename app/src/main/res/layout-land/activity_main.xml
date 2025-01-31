@@ -10,6 +10,45 @@
     tools:layout_editor_absoluteX="23dp"
     tools:layout_editor_absoluteY="340dp">
 
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="15dp"
+        android:textColorHint="@color/main"
+        app:boxBackgroundColor="@color/main"
+        app:boxStrokeColor="@color/main"
+        app:counterTextColor="@color/main"
+        app:cursorColor="@color/main"
+        app:helperTextTextColor="@color/main"
+        app:hintTextColor="@color/main"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:placeholderTextColor="@color/main"
+        app:prefixTextColor="@color/main"
+        app:suffixTextColor="@color/main"
+        app:endIconTint="@color/white">
+
+    <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
+            android:layout_width="129dp"
+            android:layout_height="57dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/secular_one"
+            android:inputType="none"
+            android:text="200 ml"
+            android:textColor="@color/white"
+            android:textColorHighlight="#E91E63"
+            android:textColorHint="#E91E63"
+            android:textColorLink="@color/white"
+            app:dropDownBackgroundTint="@color/back"
+            app:simpleItemSelectedColor="#C0E0F0"
+            app:simpleItemSelectedRippleColor="#E91E63" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/button11"

@@ -43,12 +43,21 @@ class UserDataManager(context: Context) {
         return UserData(gender, height, weight, age, dailyWaterIntake, counter)
     }
 
-    fun updateCounter(newAmount: Double) {
-        val currentCounter = sharedPreferences.getFloat("counter", 0f).toDouble()
-        val updatedCounter = currentCounter + newAmount
 
+    fun updateCounter(newAmount: Double) {
         val editor = sharedPreferences.edit()
-        editor.putFloat("counter", updatedCounter.toFloat())
+        editor.putFloat("counter", newAmount.toFloat())
         editor.apply()
     }
+
+    fun saveLastUpdateDate(date: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString("lastUpdateDate", date)
+        editor.apply()
+    }
+
+    fun loadLastUpdateDate(): String? {
+        return sharedPreferences.getString("lastUpdateDate", null)
+    }
+
 }

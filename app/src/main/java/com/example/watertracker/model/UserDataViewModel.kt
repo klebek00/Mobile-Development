@@ -3,50 +3,44 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.watertracker.repository.UserRepository
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-class UserDataViewModel(application: Application) : AndroidViewModel(application) {
-    val userData = UserData()
-    private val sharedPreferences: SharedPreferences =
-        application.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
-    init {
-        loadUserData()
+    private val _userData = MutableLiveData<UserData?>()
+    val userData: LiveData<UserData?> get() = _userData
+
+    private val _counter = MutableLiveData<Double>()
+    val counter: LiveData<Double> get() = _counter
+
+    fun loadUserData() {
+        _userData.value = repository.getUserData()
     }
-    fun calculateDailyWaterIntake() {
-        userData.weight?.let {
-            var baseIntake = it * 0.033
 
-            if (userData.gender == "F") {
-                baseIntake *= 0.9
-            }
+    fun saveUserData(userData: UserData) {
+        repository.saveUserData(userData)
+        _userData.value = userData
+    }
 
-            if (userData.age != null && userData.age!! > 50) {
-                baseIntake *= 0.9
-            }
+    fun updateCounter(newAmount: Double) {
+        repository.updateCounter(newAmount)
+        _counter.value = newAmount
+    }
 
-            userData.dailyWaterIntake = baseIntake / 1000
+    fun resetCounterIfNeeded() {
+        val lastUpdate = repository.getLastUpdateDate()
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+        if (lastUpdate != today) {
+            repository.updateCounter(0.0)
+            repository.saveLastUpdateDate(today)
+            _counter.value = 0.0
         }
     }
-
-    public fun saveUserData() {
-        sharedPreferences.edit().apply {
-            putString("gender", userData.gender)
-            putInt("height", userData.height)
-            putInt("weight", userData.weight)
-            putInt("age", userData.age)
-            putFloat("dailyWaterIntake", userData.dailyWaterIntake?.toFloat() ?: 0f)
-            apply()
-        }
-    }
-
-    private fun loadUserData() {
-        userData.gender = sharedPreferences.getString("gender", "")
-        userData.height = sharedPreferences.getInt("height", 0)
-        userData.weight = sharedPreferences.getInt("weight", 0)
-        userData.age = sharedPreferences.getInt("age", 0)
-        userData.dailyWaterIntake = sharedPreferences.getFloat("dailyWaterIntake", 0f).toDouble()
-    }
-
-
 }

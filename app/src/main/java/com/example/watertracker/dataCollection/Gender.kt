@@ -33,6 +33,7 @@ class Gender : AppCompatActivity() {
             val intent = Intent(this, AgeActivity::class.java)
             intent.putExtra("gender", selectedGender)
             startActivity(intent)
+            finish()
         }
     }
 

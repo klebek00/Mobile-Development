@@ -28,6 +28,12 @@ class HightActivity : AppCompatActivity() {
         hight.setMinValue(100)
         hight.setMaxValue(250)
 
+        if (savedInstanceState != null) {
+            val savedH = savedInstanceState.getInt("selectedH", 100)
+            if (savedH > 0) {
+                hight.value = savedH
+            }
+        }
         buttonNext.setOnClickListener {
             val selectedhight = hight.value
             val intent = Intent(this, WaightActivity::class.java)
@@ -35,6 +41,7 @@ class HightActivity : AppCompatActivity() {
             intent.putExtra("age", age)
             intent.putExtra("hight", selectedhight)
             startActivity(intent)
+            finish()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -42,5 +49,9 @@ class HightActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("selectedH", hight.value)
     }
 }

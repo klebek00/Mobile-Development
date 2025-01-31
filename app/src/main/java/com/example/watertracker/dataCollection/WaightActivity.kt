@@ -32,6 +32,13 @@ class WaightActivity : AppCompatActivity() {
         weight.setMinValue(20)
         weight.setMaxValue(150)
 
+        if (savedInstanceState != null) {
+            val savedW = savedInstanceState.getInt("selectedW", 100)
+            if (savedW > 0) {
+                weight.value = savedW
+            }
+        }
+
         userDataManager = UserDataManager(this)
 
         buttonNext.setOnClickListener {
@@ -51,6 +58,7 @@ class WaightActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
 
             startActivity(intent)
+            finish()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -58,5 +66,9 @@ class WaightActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("selectedW", weight.value)
     }
 }

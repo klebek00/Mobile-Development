@@ -29,6 +29,13 @@ class AgeActivity : AppCompatActivity() {
         age.setMinValue(5)
         age.setMaxValue(100)
 
+        if (savedInstanceState != null) {
+            val savedAge = savedInstanceState.getInt("selectedAge", 0)
+            if (savedAge > 0) {
+                age.value = savedAge
+            }
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -42,6 +49,12 @@ class AgeActivity : AppCompatActivity() {
             intent.putExtra("gender", gender)
             intent.putExtra("age", selectedAge)
             startActivity(intent)
+            finish()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("selectedAge", age.value)
     }
 }
