@@ -2,12 +2,21 @@ package com.example.watertracker.model
 
 import android.content.Context
 import com.example.watertracker.utility.WaterIntakeCalculator
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class UserDataManager(context: Context) {
 
     private val sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
     private val waterIntakeCalculator = WaterIntakeCalculator()
 
+    fun hasUserData(): Boolean {
+        return sharedPreferences.contains("gender") &&
+                sharedPreferences.contains("height") &&
+                sharedPreferences.contains("weight") &&
+                sharedPreferences.contains("age")
+    }
 
     fun saveUserData(userData: UserData) {
         val editor = sharedPreferences.edit()
@@ -19,14 +28,6 @@ class UserDataManager(context: Context) {
         editor.putFloat("dailyWaterIntake", dailyWaterIntake.toFloat() ?: -1f)
         editor.putFloat("counter", userData.counter?.toFloat() ?: -1f)
         editor.apply()
-    }
-
-
-    fun hasUserData(): Boolean {
-        return sharedPreferences.contains("gender") &&
-                sharedPreferences.contains("height") &&
-                sharedPreferences.contains("weight") &&
-                sharedPreferences.contains("age")
     }
 
 
@@ -54,6 +55,11 @@ class UserDataManager(context: Context) {
         val editor = sharedPreferences.edit()
         editor.putString("lastUpdateDate", date)
         editor.apply()
+    }
+
+    fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 
     fun loadLastUpdateDate(): String? {

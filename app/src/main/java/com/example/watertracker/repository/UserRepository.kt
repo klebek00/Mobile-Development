@@ -1,10 +1,16 @@
 package com.example.watertracker.repository
 
+import android.content.Context
 import com.example.watertracker.model.UserData
 import com.example.watertracker.model.UserDataManager
 
-class UserRepository(private val userDataManager: UserDataManager) {
+class UserRepository(context: Context) {
 
+    private val userDataManager = UserDataManager(context)
+
+    fun loadUserData(): UserData?{
+        return userDataManager.loadUserData()
+    }
     fun saveUserData(userData: UserData) {
         userDataManager.saveUserData(userData)
     }
@@ -21,11 +27,19 @@ class UserRepository(private val userDataManager: UserDataManager) {
         userDataManager.updateCounter(newAmount)
     }
 
+    fun saveLastUpdateDate(date: String) {
+        userDataManager.saveLastUpdateDate(date)
+    }
+
     fun getLastUpdateDate(): String? {
         return userDataManager.loadLastUpdateDate()
     }
 
-    fun saveLastUpdateDate(date: String) {
-        userDataManager.saveLastUpdateDate(date)
+    fun getCurrentDate(): String {
+        return userDataManager.getCurrentDate()
+    }
+
+    fun loadLastUpdateDate(): String? {
+        return  userDataManager.loadLastUpdateDate()
     }
 }

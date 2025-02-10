@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.WaterTracker.AppWidget.Container"
+    android:theme="@style/Theme.WaterTracker.AppWidgetContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@drawable/rounded">
+
+
+    <Button
+        android:id="@+id/increment_button"
+        android:layout_width="142dp"
+        android:layout_height="65dp"
+        android:layout_below="@+id/appwidget_text"
+        android:layout_marginLeft="44dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/round_butt"
+        android:text="+ 200 ml"
+        android:textColor="@color/main"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/appwidget_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="20dp"
+        android:text="0.00 L"
+        android:textColor="@color/back"
+        android:textColorHighlight="@color/white"
+        android:textColorHint="@color/white"
+        android:textColorLink="@color/white"
+        android:textSize="34sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>

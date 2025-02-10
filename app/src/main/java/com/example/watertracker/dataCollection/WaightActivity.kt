@@ -12,10 +12,11 @@ import com.example.watertracker.MainActivity
 import com.example.watertracker.R
 import com.example.watertracker.model.UserData
 import com.example.watertracker.model.UserDataManager
+import com.example.watertracker.repository.UserRepository
 
 class WaightActivity : AppCompatActivity() {
     private lateinit var weight : NumberPicker
-    private lateinit var userDataManager: UserDataManager
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +40,7 @@ class WaightActivity : AppCompatActivity() {
             }
         }
 
-        userDataManager = UserDataManager(this)
+        userRepository = UserRepository(this)
 
         buttonNext.setOnClickListener {
             val selectedWeight = weight.value
@@ -53,7 +54,7 @@ class WaightActivity : AppCompatActivity() {
                 counter = 0.0
             )
 
-            userDataManager.saveUserData(userData)
+            userRepository.saveUserData(userData)
 
             val intent = Intent(this, MainActivity::class.java)
 

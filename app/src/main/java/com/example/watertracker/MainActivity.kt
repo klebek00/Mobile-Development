@@ -1,47 +1,116 @@
 package com.example.watertracker
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import android.view.View;
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.example.watertracker.model.UserDataManager
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.example.watertracker.api.NotificationHelper
+import com.example.watertracker.api.sensor.SensorManagerHelper
+import com.example.watertracker.api.widget.AppWidget
+import com.example.watertracker.dataCollection.WaightActivity
+import com.example.watertracker.repository.UserRepository
+
 
 class MainActivity : AppCompatActivity() {
     private var progress = 0
+    private lateinit var updateAppReceiver: BroadcastReceiver
+    private lateinit var sensorManagerHelper: SensorManagerHelper
     private lateinit var button: Button
     private lateinit var buttonToday: Button
+    private lateinit var buttonHistory: Button
+    private lateinit var buttonMe: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var textView: TextView
-    private lateinit var userDataManager: UserDataManager
+    private lateinit var userRepository: UserRepository
     private var counter: Double = 0.0
     private var dailyWaterIntake: Double = 0.0
     private var water: Double = 200.0
+    val intervalMillis = 600 * 1000L
 
+    private lateinit var notificationHelper: NotificationHelper
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private fun registerUpdateReceiver() {
+        val appUpdateFilter = IntentFilter("com.example.watertracker.ACTION_UPDATE_APP")
+        updateAppReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val userData = userRepository.loadUserData()
+                if (userData != null) {
+                    counter = userData.counter ?: 0.0
+                    Log.d("Counter", "Значение counter: $counter")
+                    dailyWaterIntake = userData.dailyWaterIntake ?: 0.0
+                    amountCounter()
+                    progressCounter()
+                    updateProgressBar()
+                }
+            }
+        }
+
+        registerReceiver(updateAppReceiver, appUpdateFilter)
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        registerUpdateReceiver()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(updateAppReceiver)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManagerHelper.stop()
+    }
 
     override fun onResume() {
         super.onResume()
+        sensorManagerHelper.start()
         val ml = resources.getStringArray(R.array.array)
         val arr = ArrayAdapter(this, R.layout.dropdown_item, ml)
         val autoCompleteTextView = findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
         autoCompleteTextView.setAdapter(arr)
     }
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+
+        notificationHelper = NotificationHelper(this)
+        notificationHelper.createNotificationChannel()
+        notificationHelper.setWaterReminderAlarm(intervalMillis)
+
+        sensorManagerHelper = SensorManagerHelper(this) { newCounter ->
+            counter += newCounter
+            userRepository.updateCounter(counter)
+            amountCounter()
+            progressCounter()
+            updateProgressBar()
+            val intent = Intent(AppWidget.ACTION_UPDATE_WIDGET)
+            sendBroadcast(intent)
+        }
+
+        userRepository = UserRepository(this)
 
         val ml = resources.getStringArray(R.array.array)
         val arr = ArrayAdapter(this, R.layout.dropdown_item, ml)
@@ -58,14 +127,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         button = findViewById(R.id.button7)
-        buttonToday = findViewById(R.id.button11)
         progressBar = findViewById(R.id.progress_bar)
         textView = findViewById(R.id.text_view_progress)
+        buttonToday = findViewById(R.id.button11)
+        buttonHistory = findViewById(R.id.button12)
+        buttonMe = findViewById(R.id.button13)
 
-        userDataManager = UserDataManager(this)
 
-        val lastUpdateDate = userDataManager.loadLastUpdateDate()
-        val currentDate = getCurrentDate()
+
+        val lastUpdateDate = userRepository.loadLastUpdateDate()
+        val currentDate = userRepository.getCurrentDate()
 
         Log.d("MyTag", "Значение lastUpdateDate: $lastUpdateDate")
         Log.d("MyTag", "Значение currentDate: $currentDate")
@@ -73,11 +144,11 @@ class MainActivity : AppCompatActivity() {
         if (lastUpdateDate == null || lastUpdateDate != currentDate) {
             counter = 0.0
             progress = 0
-            userDataManager.updateCounter(counter)
-            userDataManager.saveLastUpdateDate(currentDate)
+            userRepository.updateCounter(counter)
+            userRepository.saveLastUpdateDate(currentDate)
 
         } else {
-            val userData = userDataManager.loadUserData()
+            val userData = userRepository.loadUserData()
             if (userData != null) {
                 dailyWaterIntake = userData.dailyWaterIntake ?: 0.0
                 counter = userData.counter ?: 0.0
@@ -93,7 +164,7 @@ class MainActivity : AppCompatActivity() {
             dailyWaterIntake = savedInstanceState.getDouble("dailyWaterIntake", 0.0)
             water = savedInstanceState.getDouble("water", 0.2)
         } else {
-            val userData = userDataManager.loadUserData()
+            val userData = userRepository.loadUserData()
             if (userData != null) {
                 dailyWaterIntake = userData.dailyWaterIntake ?: 0.0
                 counter = userData.counter ?: 0.0
@@ -102,8 +173,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (dailyWaterIntake > 0) {
-            progress = (counter / dailyWaterIntake * 100).toInt()
-            if (progress > 100) progress = 100
+            progressCounter()
         }
 
         amountCounter()
@@ -115,7 +185,7 @@ class MainActivity : AppCompatActivity() {
 
             amountCounter()
 
-            userDataManager.updateCounter(counter)
+            userRepository.updateCounter(counter)
 
             if (progress < 100) {
                 progress = (counter / dailyWaterIntake * 100).toInt()
@@ -123,7 +193,21 @@ class MainActivity : AppCompatActivity() {
                     progress = 100
                 }
                 updateProgressBar()
+
             }
+            val intent = Intent(AppWidget.ACTION_UPDATE_WIDGET)
+            sendBroadcast(intent)
+        }
+
+        buttonHistory.setOnClickListener {
+            val intent = Intent(this, HistoryActivity::class.java)
+            startActivity(intent)
+
+        }
+        buttonMe.setOnClickListener {
+            val intent = Intent(this, SettingActivity::class.java)
+            startActivity(intent)
+
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -140,7 +224,11 @@ class MainActivity : AppCompatActivity() {
         outState.putDouble("dailyWaterIntake", dailyWaterIntake)
         outState.putDouble("water", water)
     }
-
+    private fun progressCounter()
+    {
+        progress = (counter / dailyWaterIntake * 100).toInt()
+        if (progress > 100) progress = 100
+    }
     private fun updateProgressBar() {
         progressBar.progress = progress
         textView.text = "${progress}%"
@@ -153,11 +241,15 @@ class MainActivity : AppCompatActivity() {
         textViewResult.text = "$formattedCounter / $formattedDailyWaterIntake L"
     }
 
-    private fun getCurrentDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return dateFormat.format(Date())
+    fun checkAndSetReminder() {
+        val lastReminderTime = notificationHelper.getLastReminderTime()
+        val currentTime = System.currentTimeMillis()
+
+        if (lastReminderTime == 0L || currentTime - lastReminderTime >= intervalMillis) {
+            notificationHelper.setWaterReminderAlarm(intervalMillis)
+            notificationHelper.saveLastReminderTime(currentTime)
+        }
     }
+
 }
 
-
-//choose counter

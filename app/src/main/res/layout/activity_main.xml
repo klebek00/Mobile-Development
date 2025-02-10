@@ -14,39 +14,40 @@
         android:layout_height="match_parent"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="600dp"
-        android:textColorHint="@color/main"
+        android:textColorHint="@color/back"
         app:boxBackgroundColor="@color/main"
         app:boxStrokeColor="@color/main"
-        app:counterTextColor="@color/main"
-        app:cursorColor="@color/main"
-        app:helperTextTextColor="@color/main"
-        app:hintTextColor="@color/main"
+        app:counterTextColor="@color/back"
+        app:cursorColor="@color/back"
+        app:endIconTint="@color/white"
+        app:helperTextTextColor="@color/back"
+        app:hintTextColor="@color/back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:placeholderTextColor="@color/main"
-        app:prefixTextColor="@color/main"
-        app:suffixTextColor="@color/main"
+        app:placeholderTextColor="@color/back"
+        app:prefixTextColor="@color/back"
 
-        app:endIconTint="@color/white">
+        app:suffixTextColor="@color/back">
 
 
-    <AutoCompleteTextView
+        <AutoCompleteTextView
             android:id="@+id/autoCompleteTextView"
             android:layout_width="129dp"
             android:layout_height="57dp"
             android:layout_weight="1"
             android:fontFamily="@font/secular_one"
             android:inputType="none"
+            android:shadowColor="#C0E0F0"
             android:text="200 ml"
             android:textColor="@color/white"
-            android:textColorHighlight="#E91E63"
-            android:textColorHint="#E91E63"
+            android:textColorHighlight="#C0E0F0"
+            android:textColorHint="#C0E0F0"
             android:textColorLink="@color/white"
             app:dropDownBackgroundTint="@color/back"
             app:simpleItemSelectedColor="#C0E0F0"
-            app:simpleItemSelectedRippleColor="#E91E63" />
+            app:simpleItemSelectedRippleColor="#C0E0F0" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -125,7 +126,8 @@
             style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/main"
+            android:backgroundTint="@color/button_pressed"
+            android:clickable="false"
             android:text="Today"
             tools:ignore="MissingConstraints" />
 
@@ -146,7 +148,6 @@
             android:backgroundTint="@color/main"
             android:text="Me"
             tools:ignore="MissingConstraints" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

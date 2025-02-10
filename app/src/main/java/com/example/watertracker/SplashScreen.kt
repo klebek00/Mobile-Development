@@ -11,16 +11,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.watertracker.dataCollection.Gender
 import com.example.watertracker.model.UserDataManager
+import com.example.watertracker.repository.UserRepository
 
 class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_splash_screen)
+        setContentView(R.layout.splash_screen)
 
-        val userDataManager = UserDataManager(this)
-        if (userDataManager.hasUserData()) {
+        val userRepository = UserRepository(this)
+        if (userRepository.hasUserData()) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)

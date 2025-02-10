@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "621123306344",
+    "project_id": "watertracker-ac586",
+    "storage_bucket": "watertracker-ac586.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621123306344:android:8e413b955898610dc10cdd",
+        "android_client_info": {
+          "package_name": "com.example.watertracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2JHFD1uFNUHOyqcSeK9OyN2fLeBdF30M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
