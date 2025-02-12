@@ -6,6 +6,5 @@ data class UserData(
     var height: Int = 0,
     var weight: Int = 0,
     var age: Int = 0,
-    var dailyWaterIntake: Double? = null,
-    var counter: Double? = null
+
 )

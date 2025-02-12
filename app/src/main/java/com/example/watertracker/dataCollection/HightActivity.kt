@@ -12,34 +12,34 @@ import com.example.watertracker.R
 
 class HightActivity : AppCompatActivity() {
 
-    private lateinit var hight : NumberPicker
+    private lateinit var height : NumberPicker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_hight)
 
-        hight = findViewById(R.id.numPicker1)
+        height = findViewById(R.id.numPicker1)
 
         val buttonNext = findViewById<Button>(R.id.buttonNext)
         val gender = intent.getStringExtra("gender")
-        val age = intent.getStringExtra("age")
+        val age = intent.getIntExtra("age", 0)
 
-        hight.setMinValue(100)
-        hight.setMaxValue(250)
+        height.setMinValue(100)
+        height.setMaxValue(250)
 
         if (savedInstanceState != null) {
             val savedH = savedInstanceState.getInt("selectedH", 100)
             if (savedH > 0) {
-                hight.value = savedH
+                height.value = savedH
             }
         }
         buttonNext.setOnClickListener {
-            val selectedhight = hight.value
+            val selectedhight = height.value
             val intent = Intent(this, WaightActivity::class.java)
             intent.putExtra("gender", gender)
             intent.putExtra("age", age)
-            intent.putExtra("hight", selectedhight)
+            intent.putExtra("height", selectedhight)
             startActivity(intent)
             finish()
         }
@@ -52,6 +52,6 @@ class HightActivity : AppCompatActivity() {
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt("selectedH", hight.value)
+        outState.putInt("selectedH", height.value)
     }
 }

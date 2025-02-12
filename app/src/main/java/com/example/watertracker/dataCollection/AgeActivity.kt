@@ -12,7 +12,7 @@ import android.widget.RadioGroup
 import com.example.watertracker.MainActivity
 import com.example.watertracker.R
 
-class AgeActivity : AppCompatActivity() {
+class  AgeActivity : AppCompatActivity() {
     private lateinit var age : NumberPicker
 
     override fun onCreate(savedInstanceState: Bundle?) {

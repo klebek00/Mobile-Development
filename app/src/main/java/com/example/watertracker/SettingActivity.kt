@@ -1,5 +1,6 @@
 package com.example.watertracker
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -23,13 +24,15 @@ class SettingActivity : AppCompatActivity() {
 
         buttonToday.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-
+            val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+            startActivity(intent, options.toBundle())
+            finish()
         }
         buttonHistory.setOnClickListener {
             val intent = Intent(this, HistoryActivity::class.java)
-            startActivity(intent)
-
+            val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+            startActivity(intent, options.toBundle())
+            finish()
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

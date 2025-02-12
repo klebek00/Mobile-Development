@@ -1,6 +1,7 @@
 package com.example.watertracker
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.app.AlarmManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -21,7 +22,10 @@ import com.example.watertracker.api.NotificationHelper
 import com.example.watertracker.api.sensor.SensorManagerHelper
 import com.example.watertracker.api.widget.AppWidget
 import com.example.watertracker.dataCollection.WaightActivity
-import com.example.watertracker.repository.UserRepository
+import com.example.watertracker.model.HistoryData
+import com.example.watertracker.repository.HistoryRepository
+import com.example.watertracker.repository.UserDataRepository
+import com.example.watertracker.repository.WaterRepository
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,11 +38,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonMe: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var textView: TextView
-    private lateinit var userRepository: UserRepository
+    private lateinit var waterRepository: WaterRepository
+    private lateinit var userDataRepository: UserDataRepository
     private var counter: Double = 0.0
     private var dailyWaterIntake: Double = 0.0
     private var water: Double = 200.0
     val intervalMillis = 600 * 1000L
+
+    private lateinit var historyRepository: HistoryRepository
 
     private lateinit var notificationHelper: NotificationHelper
 
@@ -46,8 +53,15 @@ class MainActivity : AppCompatActivity() {
     private fun registerUpdateReceiver() {
         val appUpdateFilter = IntentFilter("com.example.watertracker.ACTION_UPDATE_APP")
         updateAppReceiver = object : BroadcastReceiver() {
+            var isUpdateInProgress = false  // флаг для предотвращения бесконечного цикла
+
             override fun onReceive(context: Context?, intent: Intent?) {
-                val userData = userRepository.loadUserData()
+                if (isUpdateInProgress) {
+                    return  // Если уже идет обработка, ничего не делаем
+                }
+                isUpdateInProgress = true  // Устанавливаем флаг, что обработка началась
+
+                val userData = waterRepository.loadUserData()
                 if (userData != null) {
                     counter = userData.counter ?: 0.0
                     Log.d("Counter", "Значение counter: $counter")
@@ -55,13 +69,21 @@ class MainActivity : AppCompatActivity() {
                     amountCounter()
                     progressCounter()
                     updateProgressBar()
+
+                    // Проверяем флаг перед отправкой сигнала, чтобы избежать зацикливания
+                    if (!isUpdateInProgress) {
+                        sendBroadcast(intent)  // если нужно отправить, но нужно быть осторожным с этим
+                    }
                 }
+
+                isUpdateInProgress = false  // Сбрасываем флаг после завершения обработки
             }
         }
 
         registerReceiver(updateAppReceiver, appUpdateFilter)
-
     }
+
+
 
     override fun onStart() {
         super.onStart()
@@ -77,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         sensorManagerHelper.stop()
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -102,15 +125,20 @@ class MainActivity : AppCompatActivity() {
 
         sensorManagerHelper = SensorManagerHelper(this) { newCounter ->
             counter += newCounter
-            userRepository.updateCounter(counter)
+            waterRepository.updateCounter(counter)
             amountCounter()
             progressCounter()
             updateProgressBar()
+            val date = System.currentTimeMillis()
+            val historyData = HistoryData(0.05, date)
+            historyRepository.saveUserData(historyData)
             val intent = Intent(AppWidget.ACTION_UPDATE_WIDGET)
             sendBroadcast(intent)
         }
 
-        userRepository = UserRepository(this)
+        waterRepository = WaterRepository(this)
+        userDataRepository = UserDataRepository(this)
+        historyRepository = HistoryRepository(this)
 
         val ml = resources.getStringArray(R.array.array)
         val arr = ArrayAdapter(this, R.layout.dropdown_item, ml)
@@ -135,8 +163,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val lastUpdateDate = userRepository.loadLastUpdateDate()
-        val currentDate = userRepository.getCurrentDate()
+        val lastUpdateDate = waterRepository.loadLastUpdateDate()
+        val currentDate = waterRepository.getCurrentDate()
 
         Log.d("MyTag", "Значение lastUpdateDate: $lastUpdateDate")
         Log.d("MyTag", "Значение currentDate: $currentDate")
@@ -144,11 +172,11 @@ class MainActivity : AppCompatActivity() {
         if (lastUpdateDate == null || lastUpdateDate != currentDate) {
             counter = 0.0
             progress = 0
-            userRepository.updateCounter(counter)
-            userRepository.saveLastUpdateDate(currentDate)
+            waterRepository.updateCounter(counter)
+            waterRepository.saveLastUpdateDate(currentDate)
 
         } else {
-            val userData = userRepository.loadUserData()
+            val userData = waterRepository.loadUserData()
             if (userData != null) {
                 dailyWaterIntake = userData.dailyWaterIntake ?: 0.0
                 counter = userData.counter ?: 0.0
@@ -164,7 +192,7 @@ class MainActivity : AppCompatActivity() {
             dailyWaterIntake = savedInstanceState.getDouble("dailyWaterIntake", 0.0)
             water = savedInstanceState.getDouble("water", 0.2)
         } else {
-            val userData = userRepository.loadUserData()
+            val userData = waterRepository.loadUserData()
             if (userData != null) {
                 dailyWaterIntake = userData.dailyWaterIntake ?: 0.0
                 counter = userData.counter ?: 0.0
@@ -181,11 +209,13 @@ class MainActivity : AppCompatActivity() {
 
         button.setOnClickListener {
 
-            counter += water.div(1000)
+            val amount = water.div(1000)
+            val date = System.currentTimeMillis()
+            counter += amount
 
             amountCounter()
 
-            userRepository.updateCounter(counter)
+            waterRepository.updateCounter(counter)
 
             if (progress < 100) {
                 progress = (counter / dailyWaterIntake * 100).toInt()
@@ -196,17 +226,23 @@ class MainActivity : AppCompatActivity() {
 
             }
             val intent = Intent(AppWidget.ACTION_UPDATE_WIDGET)
+            val historyData = HistoryData(amount, date)
+            historyRepository.saveUserData(historyData)
             sendBroadcast(intent)
         }
 
         buttonHistory.setOnClickListener {
             val intent = Intent(this, HistoryActivity::class.java)
-            startActivity(intent)
+            val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+            startActivity(intent, options.toBundle())
+            finish()
 
         }
         buttonMe.setOnClickListener {
             val intent = Intent(this, SettingActivity::class.java)
-            startActivity(intent)
+            val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+            startActivity(intent, options.toBundle())
+            finish()
 
         }
 

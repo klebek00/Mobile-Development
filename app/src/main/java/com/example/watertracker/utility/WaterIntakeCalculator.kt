@@ -1,11 +1,7 @@
 package com.example.watertracker.utility
 
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-
 class WaterIntakeCalculator {
-    fun calculateDailyWaterIntake(age: Int, weight: Int, gender: String?): Double {
+    fun calculateDailyWaterIntake(age: Int, weight: Int, height: Int, gender: String?): Double {
         val baseIntake = weight * 0.03
 
         val ageFactor = when {
@@ -16,10 +12,10 @@ class WaterIntakeCalculator {
 
         val genderFactor = if (gender == "Male") 1.0 else 0.9
 
-        return baseIntake * ageFactor * genderFactor
+        val heightFactor = if (height > 180) 1.1 else 1.0
+
+        return baseIntake * ageFactor * genderFactor * heightFactor
     }
-    fun getCurrentDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return dateFormat.format(Date())
-    }
+
+
 }

@@ -10,8 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.watertracker.dataCollection.Gender
-import com.example.watertracker.model.UserDataManager
-import com.example.watertracker.repository.UserRepository
+import com.example.watertracker.repository.UserDataRepository
 
 class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,19 +19,37 @@ class SplashScreen : AppCompatActivity() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.splash_screen)
 
-        val userRepository = UserRepository(this)
-        if (userRepository.hasUserData()) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }, 2000)
-        } else {
-            Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this, Gender::class.java)
-                startActivity(intent)
-                finish()
-            }, 2000)
+//        val userRepository = UserRepository(this)
+        val userDataRepository = UserDataRepository(this)
+
+//        if (userRepository.hasUserData()) {
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                val intent = Intent(this, MainActivity::class.java)
+//                startActivity(intent)
+//                finish()
+//            }, 2000)
+//        } else {
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                val intent = Intent(this, Gender::class.java)
+//                startActivity(intent)
+//                finish()
+//            }, 2000)
+//        }
+
+        userDataRepository.checkIfUserDataExists { exists ->
+            if (exists) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }, 2000)
+            } else {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val intent = Intent(this, Gender::class.java)
+                    startActivity(intent)
+                    finish()
+                }, 2000)
+            }
         }
 
 

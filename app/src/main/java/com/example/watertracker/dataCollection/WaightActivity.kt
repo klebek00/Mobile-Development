@@ -11,12 +11,14 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.watertracker.MainActivity
 import com.example.watertracker.R
 import com.example.watertracker.model.UserData
-import com.example.watertracker.model.UserDataManager
-import com.example.watertracker.repository.UserRepository
+import com.example.watertracker.model.WaterData
+import com.example.watertracker.repository.UserDataRepository
+import com.example.watertracker.repository.WaterRepository
 
 class WaightActivity : AppCompatActivity() {
     private lateinit var weight : NumberPicker
-    private lateinit var userRepository: UserRepository
+    private lateinit var waterRepository: WaterRepository
+    private lateinit var userDataRepository: UserDataRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +29,8 @@ class WaightActivity : AppCompatActivity() {
 
         val buttonNext = findViewById<Button>(R.id.buttonNext)
         val gender = intent.getStringExtra("gender")
-        val age = intent.getStringExtra("age")
-        val hight = intent.getStringExtra("hight")
+        val age = intent.getIntExtra("age", 0)
+        val height = intent.getIntExtra("height", 0)
 
         weight.setMinValue(20)
         weight.setMaxValue(150)
@@ -40,21 +42,26 @@ class WaightActivity : AppCompatActivity() {
             }
         }
 
-        userRepository = UserRepository(this)
+        waterRepository = WaterRepository(this)
+
+        userDataRepository = UserDataRepository(this)
 
         buttonNext.setOnClickListener {
             val selectedWeight = weight.value
 
             val userData = UserData(
                 gender = gender,
-                height = hight?.toInt() ?: 0,
+                height = height,
                 weight = selectedWeight,
-                age = age?.toInt() ?: 0,
+                age = age
+            )
+            val waterData = WaterData(
                 dailyWaterIntake = 0.0,
                 counter = 0.0
             )
 
-            userRepository.saveUserData(userData)
+            waterRepository.saveUserData(waterData, userData)
+            userDataRepository.saveUserData(userData)
 
             val intent = Intent(this, MainActivity::class.java)
 
