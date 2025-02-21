@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -18,17 +19,21 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.watertracker.api.NotificationHelper
 import com.example.watertracker.api.sensor.SensorManagerHelper
 import com.example.watertracker.api.widget.AppWidget
 import com.example.watertracker.dataCollection.WaightActivity
 import com.example.watertracker.model.HistoryData
+import com.example.watertracker.model.ThemesData
 import com.example.watertracker.repository.HistoryRepository
 import com.example.watertracker.repository.UserDataRepository
 import com.example.watertracker.repository.WaterRepository
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class MainActivity : AppCompatActivity() {
+
     private var progress = 0
     private lateinit var updateAppReceiver: BroadcastReceiver
     private lateinit var sensorManagerHelper: SensorManagerHelper
@@ -49,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var notificationHelper: NotificationHelper
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+
     private fun registerUpdateReceiver() {
         val appUpdateFilter = IntentFilter("com.example.watertracker.ACTION_UPDATE_APP")
         updateAppReceiver = object : BroadcastReceiver() {
@@ -80,7 +85,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        registerReceiver(updateAppReceiver, appUpdateFilter)
+        registerReceiver(updateAppReceiver, appUpdateFilter, Context.RECEIVER_NOT_EXPORTED)
+
     }
 
 
@@ -88,6 +94,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         registerUpdateReceiver()
+
     }
 
     override fun onDestroy() {
@@ -113,11 +120,29 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@addOnCompleteListener
+            }
+
+            val token = task.result
+            Log.e("TOKEN", "Token -> $token")
+        }
+
+        Log.e("AAAAAAAAAAAAAAAAAAa", "Тема найдена")
+        userDataRepository = UserDataRepository(this)
+//        userDataRepository.loadThemeData { themeData ->
+//            if (themeData != null) {
+//                Log.e("MainActivity", "Тема найдена")
+//                applyTheme(themeData)
+//            } else {
+//                Log.e("MainActivity", "Тема не найдена, используется стандартная")
+//            }
+//        }
 
         notificationHelper = NotificationHelper(this)
         notificationHelper.createNotificationChannel()
@@ -137,7 +162,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         waterRepository = WaterRepository(this)
-        userDataRepository = UserDataRepository(this)
         historyRepository = HistoryRepository(this)
 
         val ml = resources.getStringArray(R.array.array)
@@ -152,6 +176,14 @@ class MainActivity : AppCompatActivity() {
             Log.d("MyTag", "Значение number: $number")
 
             water = number
+        }
+
+        userDataRepository.loadThemeData { themeData ->
+            if (themeData != null) {
+                applyTheme(themeData)
+            } else {
+                Log.e("MainActivity", "Тема не найдена, используется стандартная")
+            }
         }
 
         button = findViewById(R.id.button7)
@@ -277,15 +309,14 @@ class MainActivity : AppCompatActivity() {
         textViewResult.text = "$formattedCounter / $formattedDailyWaterIntake L"
     }
 
-    fun checkAndSetReminder() {
-        val lastReminderTime = notificationHelper.getLastReminderTime()
-        val currentTime = System.currentTimeMillis()
-
-        if (lastReminderTime == 0L || currentTime - lastReminderTime >= intervalMillis) {
-            notificationHelper.setWaterReminderAlarm(intervalMillis)
-            notificationHelper.saveLastReminderTime(currentTime)
+    private fun applyTheme(themeData: ThemesData) {
+        when (themeData.theme) {
+            true -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
+
+
 
 }
 

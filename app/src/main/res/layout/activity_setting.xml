@@ -5,45 +5,91 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#BCE8ECF0"
+    android:background="@color/back"
     tools:context=".SettingActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="horizontal"
+    <Button
+        android:id="@+id/button11"
+        android:textColor="@color/white"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/main"
+        android:text="Today"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button12"
+        android:textColor="@color/white"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/main"
+        android:text="History"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button13"
+        app:layout_constraintStart_toEndOf="@id/button11"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button13"
+        android:textColor="@color/white"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/button_pressed"
+        android:clickable="false"
+        android:text="Me"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toEndOf="@id/button12"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"/>
+    <RadioGroup
 
-        <Button
-            android:id="@+id/button11"
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/main"
-            android:text="Today"
-            tools:ignore="MissingConstraints" />
+        android:id="@+id/gen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#EB0000"
 
-        <Button
-            android:id="@+id/button12"
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/main"
-            android:text="History"
-            tools:ignore="MissingConstraints" />
+        android:checkedButton="@id/radioButton"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.519"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/button13"
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/button_pressed"
-            android:clickable="false"
-            android:text="Me"
-            tools:ignore="MissingConstraints" />
 
-    </LinearLayout>
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="106dp"
+            android:layout_height="101dp"
+            android:layout_margin="30dp"
+            android:background="@drawable/radio_selector"
+            android:button="@android:color/transparent"
+            android:fontFamily="@font/adlam_display"
+            android:text="☀"
+            android:textAlignment="center"
+            android:textColor="@drawable/text_color"
+            android:textSize="70dp" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="106dp"
+            android:layout_height="101dp"
+            android:layout_margin="30dp"
+            android:background="@drawable/radio_selector"
+            android:button="@android:color/transparent"
+            android:fontFamily="@font/adlam_display"
+            android:text="🌙"
+            android:textAlignment="center"
+            android:textColor="@drawable/text_color"
+            android:textSize="75dp" />
+    </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

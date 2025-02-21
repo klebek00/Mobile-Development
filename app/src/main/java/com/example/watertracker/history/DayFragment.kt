@@ -24,8 +24,8 @@ class DayFragment : Fragment() {
     private lateinit var goal: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var recordAdapter: RecordAdapter
-    private var historyList: List<HistoryData> = listOf() // Ваши данные истории
-    private var todayHistory: List<HistoryData> = listOf() // История за сегодня
+    private var historyList: List<HistoryData> = listOf()
+    private var todayHistory: List<HistoryData> = listOf()
     private lateinit var historyRepository: HistoryRepository
     private lateinit var waterRepository: WaterRepository
 
@@ -58,10 +58,13 @@ class DayFragment : Fragment() {
                 historyList = data
                 todayHistory = historyRepository.getTodayHistory(historyList)
 
-                historyRepository.getTotalWaterIntake { total ->
-                    Log.d("WaterIntake", "Сегодня выпито: $total L")
-                    totalTextView.text = "$total L"
-                }
+                val totalTodayIntake = todayHistory.sumOf { it.amount }
+                val formattedTotal = String.format("%.2f", totalTodayIntake) // Округляем до 2 знаков
+
+                Log.d("WaterIntake", "Сегодня выпито: $formattedTotal L")
+                totalTextView.text = "$formattedTotal L"
+
+                todayHistory = todayHistory.sortedBy { it.date } // Сортировка по возрастанию
 
                 recordAdapter.updateData(todayHistory)
             } else {

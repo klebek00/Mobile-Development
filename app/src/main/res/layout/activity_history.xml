@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#BCE8ECF0"
+    android:background="@color/back"
     tools:context=".HistoryActivity">
 
 
@@ -13,7 +13,8 @@
         android:id="@+id/placeholder"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/button12"
+        app:layout_constraintBottom_toTopOf="@+id/button12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/history">
@@ -50,45 +51,51 @@
             android:text="MONTH" />
     </com.google.android.material.tabs.TabLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+
 
         <Button
             android:id="@+id/button11"
+            android:textColor="@color/white"
             style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:layout_width="130dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/main"
             android:text="Today"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/button12"
+            android:textColor="@color/white"
             style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:layout_width="130dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/button_pressed"
             android:clickable="false"
             android:text="History"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button13"
+            app:layout_constraintStart_toEndOf="@id/button11"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/button13"
+            android:textColor="@color/white"
             style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:layout_width="130dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/main"
             android:text="Me"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/button12"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"/>
 
-    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

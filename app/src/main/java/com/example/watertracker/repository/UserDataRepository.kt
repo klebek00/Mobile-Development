@@ -2,6 +2,7 @@ package com.example.watertracker.repository
 
 import android.content.Context
 import android.util.Log
+import com.example.watertracker.model.ThemesData
 import com.example.watertracker.model.UserData
 import com.example.watertracker.model.UserDataModel
 
@@ -28,4 +29,31 @@ class UserDataRepository(private val context: Context) {
             }
         }
     }
+
+    fun loadThemeData(callback: (ThemesData?) -> Unit) {
+        userDataModel.loadThemeData { themeData ->
+            if (themeData != null) {
+                callback(themeData)
+            } else {
+                Log.e("UserDataViewModel", "Данные пользователя не найдены")
+                callback(null)
+            }
+        }
+    }
+
+    fun saveThemeData(themesData: ThemesData) {
+        userDataModel.saveThemeData(themesData) { success ->
+            if (success) {
+                Log.d("Firestore", "Тема успешно сохранена")
+            } else {
+                Log.e("Firestore", "Ошибка при сохранении темы")
+            }
+        }
+    }
+
+
+
+
+
+
 }

@@ -11,7 +11,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey"
         android:layout_marginLeft="13dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/secular_one"
@@ -20,7 +19,6 @@
 
     <TextView
         android:id="@+id/textViewTotal"
-        android:textColor="@color/grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
@@ -35,7 +33,6 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
         android:fontFamily="@font/secular_one"
-        android:textColor="@color/grey"
         android:text="Goal"
         android:textSize="24sp" />
 
@@ -47,13 +44,13 @@
         android:layout_marginTop="40dp"
         android:layout_marginRight="13dp"
         android:text="0.00 L"
-        android:textColor="@color/grey"
         android:textSize="20sp" />
 
 
     <!-- RecyclerView для прокручиваемой истории -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recordsRecyclerView"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

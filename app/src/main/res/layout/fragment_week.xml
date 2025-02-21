@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/week"
+    android:id="@+id/day"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".history.WeekFragment">
+    android:backgroundTint="@color/back"
+    tools:context=".history.DayFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="22222" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/secular_one"
+        android:text="Total"
+        android:textSize="24sp" />
 
+    <TextView
+        android:id="@+id/textViewTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="40dp"
+        android:text="0.00 L"
+        android:textSize="20sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recordsRecyclerView"
+
+        android:layout_width="match_parent"
+        android:layout_height="513dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="90dp"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="1" />
 </FrameLayout>

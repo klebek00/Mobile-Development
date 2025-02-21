@@ -89,7 +89,9 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
         context,
         0,
         incrementIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+
+
     )
     views.setOnClickPendingIntent(R.id.increment_button, incrementPendingIntent)
 

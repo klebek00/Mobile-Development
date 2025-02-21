@@ -1,0 +1,12 @@
+<resources>
+    <color name="back">#121212</color> <!-- Темный фон -->
+    <color name="grey">#F4EBEB</color>
+    <color name="main">#BB86FC</color> <!-- Фиолетовый основной -->
+    <color name="white">#F4EBEB</color> <!-- Белый текст -->
+    <color name="black">#000000</color> <!-- Черный текст -->
+    <color name="light_blue_600">#3700B3</color> <!-- Темный синий для status bar -->
+    <color name="button_pressed">#A368EB</color> <!-- Темный синий для status bar -->
+    <color name="dark_status_bar">#924AEB</color>
+
+
+</resources>

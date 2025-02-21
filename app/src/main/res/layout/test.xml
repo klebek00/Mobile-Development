@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#BCE8ECF0"
     tools:context=".MainActivity">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -15,11 +16,20 @@
         android:layout_marginBottom="600dp"
         android:textColorHint="@color/back"
         app:boxBackgroundColor="@color/main"
+        app:boxStrokeColor="@color/main"
+        app:counterTextColor="@color/back"
+        app:cursorColor="@color/back"
         app:endIconTint="@color/white"
+        app:helperTextTextColor="@color/back"
+        app:hintTextColor="@color/back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderTextColor="@color/back"
+        app:prefixTextColor="@color/back"
+
+        app:suffixTextColor="@color/back">
 
 
         <AutoCompleteTextView
@@ -102,47 +112,42 @@
         app:layout_constraintTop_toTopOf="@+id/progress_bar"
         tools:text="60%" />
 
-    <Button
-        android:id="@+id/button11"
-        android:textColor="@color/white"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/button_pressed"
-        android:clickable="false"
-        android:text="Today"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button12"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/button12"
-        android:textColor="@color/white"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/main"
-        android:text="History"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button13"
-        app:layout_constraintStart_toEndOf="@id/button11"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        <Button
+            android:id="@+id/button11"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/button_pressed"
+            android:clickable="false"
+            android:text="Today"
+            tools:ignore="MissingConstraints" />
 
-    <Button
-        android:id="@+id/button13"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="0dp"
-        android:textColor="@color/white"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/main"
-        android:text="Me"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button12"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"/>
+        <Button
+            android:id="@+id/button12"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/main"
+            android:text="History"
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/button13"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/main"
+            android:text="Me"
+            tools:ignore="MissingConstraints" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

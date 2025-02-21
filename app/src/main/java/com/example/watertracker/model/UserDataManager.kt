@@ -67,5 +67,63 @@ class UserDataModel(private val context : Context) {
     }
 
 
+    fun saveThemeData(themeData: ThemesData, callback: (Boolean) -> Unit) {
+        val themeRef = db.collection("users")
+            .document(getDeviceId())
+            .collection("theme")
+            .document("user_theme")
+
+        themeRef.get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    themeRef.update("theme", themeData.theme)
+                        .addOnSuccessListener {
+                            callback(true)
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("Firestore", "Ошибка при обновлении данных", e)
+                            callback(false)
+                        }
+                } else {
+                    themeRef.set(themeData)
+                        .addOnSuccessListener {
+                            callback(true)
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("Firestore", "Ошибка при создании данных", e)
+                            callback(false)
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Ошибка при проверке документа", e)
+                callback(false)
+            }
+    }
+
+
+
+    fun loadThemeData(callback: (ThemesData?) -> Unit) {
+        db.collection("users")
+            .document(getDeviceId())
+            .collection("theme")
+            .document("user_theme")
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val themeData = document.toObject(ThemesData::class.java)
+                    callback(themeData)
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Ошибка при загрузке данных", e)
+                callback(null)
+            }
+    }
+
+
+
 
 }

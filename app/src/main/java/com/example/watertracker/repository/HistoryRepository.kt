@@ -42,25 +42,26 @@ class HistoryRepository(private val context: Context){
     }
 
     // Получение данных за текущую неделю
-    fun getWeekData(): Map<String, Double> {
-        var weekHistory = mapOf<String, Double>()
+    fun getWeekData(callback: (Map<String, Double>) -> Unit) {
         historyDataManager.loadUserData { historyList ->
             if (historyList != null) {
-                weekHistory = historyDataManager.getWeekHistory(historyList)
+                callback(historyDataManager.getWeekHistory(historyList))
+            } else {
+                callback(emptyMap()) // Возвращаем пустую карту, если данных нет
             }
         }
-        return weekHistory
     }
 
     // Получение данных за текущий месяц
-    fun getMonthData(): Map<String, Double> {
-        var monthHistory = mapOf<String, Double>()
+    fun getMonthData(callback: (Map<String, Double>) -> Unit) {
         historyDataManager.loadUserData { historyList ->
             if (historyList != null) {
-                monthHistory = historyDataManager.getMonthHistory(historyList)
+                val monthHistory = historyDataManager.getMonthHistory(historyList)
+                callback(monthHistory) // Возвращаем результат через callback
+            } else {
+                callback(emptyMap()) // Если нет данных, возвращаем пустую карту
             }
         }
-        return monthHistory
     }
 
     fun getTotalWaterIntake(callback: (String) -> Unit) {

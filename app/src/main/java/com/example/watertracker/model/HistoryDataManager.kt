@@ -91,69 +91,70 @@ class HistoryDataManager(private val context : Context) {
 
     fun getWeekHistory(historyList: List<HistoryData>): Map<String, Double> {
         val calendar = Calendar.getInstance()
-        val today = Date()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-        // Получаем день недели для сегодняшнего дня
-        calendar.time = today
-        val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-
-        // Устанавливаем начало недели (понедельник)
-        calendar.add(Calendar.DAY_OF_YEAR, Calendar.MONDAY - currentDayOfWeek)
+        // Получаем понедельник текущей недели
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
         val startOfWeek = calendar.time
 
-        // Получаем дату конца недели (воскресенье)
+        // Получаем воскресенье текущей недели
         calendar.add(Calendar.DAY_OF_YEAR, 6)
         val endOfWeek = calendar.time
 
-        // Форматирование для сравнения даты
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        // Список названий дней недели
+        val daysOfWeek = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
 
-        // Фильтрация записей, которые попадают в текущую неделю
-        val weekData = historyList.filter { entry ->
-            val entryDate = Date(entry.date) // Преобразуем timestamp в Date
-            val entryDateString = dateFormat.format(entryDate) // Форматируем дату в строку
-            val entryDateParsed = dateFormat.parse(entryDateString)
-            entryDateParsed != null && !entryDateParsed.before(startOfWeek) && !entryDateParsed.after(endOfWeek)
+        // Инициализируем результат с нулевыми значениями
+        val result = mutableMapOf<String, Double>().apply {
+            daysOfWeek.forEach { put(it, 0.0) }
         }
 
-        // Группируем по дням недели и суммируем количество воды для каждого дня
-        val result = mutableMapOf<String, Double>()
-        for (entry in weekData) {
-            val entryDate = Date(entry.date)
-            calendar.time = entryDate
-            val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+        for (entry in historyList) {
+            val entryDate = Date(entry.date.toLong())
+            val entryDateString = dateFormat.format(entryDate)
+            val entryDateParsed = dateFormat.parse(entryDateString) ?: continue
 
-            // Преобразуем день недели в строку (например, Понедельник, Вторник)
-            val dayName = when (dayOfWeek) {
-                Calendar.MONDAY -> "Понедельник"
-                Calendar.TUESDAY -> "Вторник"
-                Calendar.WEDNESDAY -> "Среда"
-                Calendar.THURSDAY -> "Четверг"
-                Calendar.FRIDAY -> "Пятница"
-                Calendar.SATURDAY -> "Суббота"
-                Calendar.SUNDAY -> "Воскресенье"
-                else -> "Неизвестный день"
+            if (!entryDateParsed.before(startOfWeek) && !entryDateParsed.after(endOfWeek)) {
+                // Определяем день недели записи (1 = Sunday, 2 = Monday, ..., 7 = Saturday)
+                calendar.time = entryDateParsed
+                val dayOfWeekIndex = calendar.get(Calendar.DAY_OF_WEEK) - 1 // Приводим к 0-based индексу
+
+                // Присваиваем значение в result
+                val dayName = daysOfWeek[dayOfWeekIndex]
+                result[dayName] = result.getOrDefault(dayName, 0.0) + entry.amount
             }
-
-            // Добавляем количество воды к сумме для данного дня
-            result[dayName] = result.getOrDefault(dayName, 0.0) + entry.amount
         }
 
         return result
     }
+
+
 
     fun getMonthHistory(historyList: List<HistoryData>): Map<String, Double> {
         val dateFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault()) // Формат "ГГГГ-ММ" для месяца
 
         val result = mutableMapOf<String, Double>()
 
+        // Получаем текущий год
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR)
+
+        // Создаем карту с месяцами от "YYYY-01" до "YYYY-12"
+        for (month in 1..12) {
+            val monthString = String.format("%d-%02d", currentYear, month)
+            result[monthString] = 0.0 // Устанавливаем 0.0 для каждого месяца
+        }
+
+        // Обрабатываем данные пользователя
         for (entry in historyList) {
             val entryDate = Date(entry.date) // Преобразуем timestamp в Date
             val monthYear = dateFormat.format(entryDate) // Получаем строку вида "2025-02" (ГГГГ-ММ)
 
+            // Обновляем сумму для месяца
             result[monthYear] = result.getOrDefault(monthYear, 0.0) + entry.amount
         }
 
         return result
     }
+
 }

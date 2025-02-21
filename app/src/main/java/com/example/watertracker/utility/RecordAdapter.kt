@@ -44,4 +44,5 @@ class RecordAdapter(private var records: List<HistoryData>) : RecyclerView.Adapt
         records = newRecords
         notifyDataSetChanged()
     }
+
 }
