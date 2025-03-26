@@ -1,5 +1,6 @@
 package com.example.watertracker
 
+import CredentialManagerHelper
 import android.app.ActivityOptions
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,13 +9,16 @@ import android.util.Log
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.watertracker.model.ThemesData
 import com.example.watertracker.repository.UserDataRepository
+import kotlinx.coroutines.launch
 
 class SettingActivity : AppCompatActivity() {
     private lateinit var buttonToday: Button
@@ -25,6 +29,9 @@ class SettingActivity : AppCompatActivity() {
     private lateinit var radioDark: RadioButton
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var userDataRepository: UserDataRepository
+    private lateinit var biometricAuth: Button
+    private lateinit var credentialManagerHelper: CredentialManagerHelper
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -42,6 +49,8 @@ class SettingActivity : AppCompatActivity() {
         radioLight = findViewById(R.id.radioButton)
         radioDark = findViewById(R.id.radioButton2)
         userDataRepository = UserDataRepository(this)
+        biometricAuth = findViewById(R.id.biometric)
+        credentialManagerHelper = CredentialManagerHelper(this)
 
         if (isDarkTheme) {
             radioDark.isChecked = true
@@ -119,6 +128,11 @@ class SettingActivity : AppCompatActivity() {
             startActivity(intent, options.toBundle())
             finish()
         }
+        biometricAuth.setOnClickListener {
+            val username = "sleepingmarmot666@gmail.com"
+            saveBiometry(username)
+
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -130,6 +144,16 @@ class SettingActivity : AppCompatActivity() {
         with(sharedPreferences.edit()) {
             putBoolean("dark_theme", isDark)
             apply()
+        }
+    }
+    private fun saveBiometry(username: String) {
+        lifecycleScope.launch {
+            val isSuccess = credentialManagerHelper.saveBiometry(username)
+            if (isSuccess) {
+                Toast.makeText(this@SettingActivity, "Биометрия сохранена!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@SettingActivity, "Ошибка сохранения биометрии", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

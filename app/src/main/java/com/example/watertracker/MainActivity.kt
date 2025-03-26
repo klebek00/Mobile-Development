@@ -130,7 +130,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             val token = task.result
-            Log.e("TOKEN", "Token -> $token")
+            Log.e("TOKEN",
+                "Token -> $token")
         }
 
         Log.e("AAAAAAAAAAAAAAAAAAa", "Тема найдена")

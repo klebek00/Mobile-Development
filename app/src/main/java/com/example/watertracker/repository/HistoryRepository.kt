@@ -36,12 +36,10 @@ class HistoryRepository(private val context: Context){
         }
     }
 
-    // Получение данных за сегодняшний день
     fun getTodayHistory(historyList: List<HistoryData>): List<HistoryData> {
         return historyDataManager.getTodayHistory(historyList)
     }
 
-    // Получение данных за текущую неделю
     fun getWeekData(callback: (Map<String, Double>) -> Unit) {
         historyDataManager.loadUserData { historyList ->
             if (historyList != null) {
@@ -52,7 +50,6 @@ class HistoryRepository(private val context: Context){
         }
     }
 
-    // Получение данных за текущий месяц
     fun getMonthData(callback: (Map<String, Double>) -> Unit) {
         historyDataManager.loadUserData { historyList ->
             if (historyList != null) {
@@ -71,7 +68,7 @@ class HistoryRepository(private val context: Context){
                 val formattedTotal = String.format("%.2f", totalWaterIntake) // Округление до 2 знаков
                 callback(formattedTotal)
             } else {
-                callback("0.00") // Если данных нет, возвращаем "0.00"
+                callback("0.00")
             }
         }
     }

@@ -101,7 +101,6 @@ class HistoryDataManager(private val context : Context) {
         calendar.add(Calendar.DAY_OF_YEAR, 6)
         val endOfWeek = calendar.time
 
-        // Список названий дней недели
         val daysOfWeek = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
 
         // Инициализируем результат с нулевыми значениями
